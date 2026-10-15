@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>daomeme – profil et memecoin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+  --bg:#EEEBFF; --surface:#FFFFFF; --surface-2:#F6F4FF; --ink:#1A1646; --muted:#5B5886;
+  --line:#1A1646; --soft-line:#CFCAF2; --danger:#C2184B; --ok:#0B7A55; --on-accent:#1A1646;
+  --shadow:#1A1646;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#120F36; --surface:#1D1950; --surface-2:#26216A; --ink:#F4F1FF; --muted:#ADA9DB;
+    --line:#8F89E8; --soft-line:#3A3485; --danger:#FF7FA3; --ok:#5EE0AE; --shadow:#07061D;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#120F36; --surface:#1D1950; --surface-2:#26216A; --ink:#F4F1FF; --muted:#ADA9DB;
+  --line:#8F89E8; --soft-line:#3A3485; --danger:#FF7FA3; --ok:#5EE0AE; --shadow:#07061D;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif; font-size:16px; line-height:1.5;
+}
+h1,h2,h3{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif; margin:0; line-height:1.1}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+
+.wrap{max-width:1080px; margin:0 auto; padding:28px 18px 56px}
+header.top{margin-bottom:26px}
+header.top h1{font-size:clamp(2rem,5vw,3rem); font-weight:800; letter-spacing:-.02em}
+header.top p{margin:8px 0 0; color:var(--muted); max-width:56ch}
+.demo-note{display:inline-block; margin-top:12px; padding:6px 12px; border:2px dashed var(--line); border-radius:10px; font-size:.9rem}
+
+.layout{display:grid; gap:24px; grid-template-columns:1fr; align-items:start}
+@media (min-width:880px){ .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .preview-col{position:sticky; top:calc(16px + env(safe-area-inset-top,0px))} }
+
+.panel{background:var(--surface); border:2px solid var(--line); border-radius:18px; padding:20px; margin-bottom:20px}
+.panel h2{font-size:1.4rem; font-weight:800; margin-bottom:4px}
+.panel .hint{margin:0 0 14px; color:var(--muted); font-size:.92rem}
+
+label.field{display:block; margin-bottom:14px}
+label.field > span, .legend{display:block; font-weight:700; font-size:.92rem; margin-bottom:5px}
+.input, select.input, textarea.input{
+  width:100%; padding:10px 12px; background:var(--surface-2); border:2px solid var(--soft-line); border-radius:10px;
+}
+.input:focus{border-color:var(--ink)}
+textarea.input{resize:vertical; min-height:74px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:520px){ .row2{grid-template-columns:1fr} }
+.counter{float:right; color:var(--muted); font-weight:400}
+
+.picker{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; padding:0; border:0}
+.picker .opt{
+  width:44px; height:44px; display:grid; place-items:center; font-size:1.4rem; cursor:pointer;
+  background:var(--surface-2); border:2px solid var(--soft-line); border-radius:12px;
+}
+.picker .opt[aria-checked="true"]{border-color:var(--ink); background:var(--surface); box-shadow:3px 3px 0 var(--shadow)}
+.swatch{width:36px; height:36px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0}
+.swatch[aria-checked="true"]{box-shadow:0 0 0 3px var(--surface), 0 0 0 5px var(--ink)}
+
+.btn{
+  display:inline-flex; align-items:center; gap:8px; padding:11px 18px; font-weight:700; cursor:pointer;
+  background:#FFD23F; color:#1A1646; border:2px solid var(--line); border-radius:12px; box-shadow:4px 4px 0 var(--shadow);
+}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:5px 5px 0 var(--shadow)}
+.btn:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--shadow)}
+.btn.ghost{background:transparent; color:var(--ink); box-shadow:none; border-color:var(--soft-line); padding:8px 12px; font-size:.9rem}
+.btn.ghost:hover{transform:none; border-color:var(--ink)}
+.btn.small{padding:6px 10px; font-size:.85rem; box-shadow:none}
+.addr-line{display:flex; gap:8px}
+.addr-line .input{min-width:0}
+.msg{min-height:1.4em; margin:10px 0 0; font-size:.92rem; font-weight:500}
+.msg.err{color:var(--danger)} .msg.ok{color:var(--ok)}
+
+/* Aperçu */
+.card{background:var(--surface); border:2px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:8px 8px 0 var(--shadow)}
+.banner{height:96px; background:var(--accent,#FFD23F); border-bottom:2px solid var(--line)}
+.who{padding:0 20px 18px; margin-top:-44px}
+.avatar{
+  width:88px; height:88px; border-radius:50%; display:grid; place-items:center; font-size:2.6rem;
+  background:var(--surface); border:3px solid var(--line);
+}
+.who h2{margin-top:10px; font-size:1.7rem; font-weight:800; overflow-wrap:anywhere}
+.handle{color:var(--muted); font-weight:500; overflow-wrap:anywhere}
+.bio{margin:10px 0 0; overflow-wrap:anywhere}
+.placeholder{color:var(--muted)}
+.count{padding:10px 20px; border-top:2px solid var(--line); font-weight:700; background:var(--surface-2)}
+
+.coins{list-style:none; margin:0; padding:0}
+.coin{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:16px 20px; border-top:2px solid var(--soft-line)}
+.coin:first-child{border-top:0}
+.coin.pop{animation:pop .35s ease-out}
+@keyframes pop{0%{transform:scale(.94); opacity:.4}100%{transform:none; opacity:1}}
+@media (prefers-reduced-motion: reduce){ .coin.pop{animation:none} .btn:hover,.btn:active{transform:none} }
+.sticker{
+  width:60px; height:60px; border-radius:50%; display:grid; place-items:center; font-size:1.9rem;
+  background:var(--accent,#FFD23F); border:3px solid var(--line); box-shadow:3px 3px 0 var(--shadow);
+  transform:rotate(var(--tilt,-6deg));
+}
+.coin-main{min-width:0}
+.coin-main h3{font-size:1.1rem; font-weight:800; overflow-wrap:anywhere}
+.ticker{font-weight:700; color:var(--muted); margin-left:6px; font-family:"DM Sans",sans-serif; font-size:.95rem}
+.meta{display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; margin-top:4px; font-size:.85rem; color:var(--muted)}
+.pill{border:1.5px solid var(--soft-line); border-radius:999px; padding:1px 9px; font-weight:700; color:var(--ink)}
+.coin-desc{margin:6px 0 0; font-size:.9rem; overflow-wrap:anywhere}
+.coin-actions{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap}
+.coin-price{text-align:right}
+.coin-price .p{font-weight:800}
+.chg.up{color:var(--ok)} .chg.down{color:var(--danger)}
+.chg{font-weight:700; font-size:.88rem}
+.spark{display:block; margin:4px 0 0 auto}
+.empty{padding:26px 20px; color:var(--muted)}
+.empty strong{display:block; color:var(--ink); margin-bottom:2px}
+.foot-actions{margin-top:14px; display:flex; justify-content:flex-end}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.search{position:relative; margin-top:18px; max-width:560px}
+.s-icon{position:absolute; left:12px; top:11px; pointer-events:none}
+.search .input{padding-left:40px; background:var(--surface); border-color:var(--line)}
+.results{position:absolute; left:0; right:0; z-index:20; list-style:none; margin:8px 0 0; padding:0; background:var(--surface); border:2px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:5px 5px 0 var(--shadow)}
+.results button{width:100%; text-align:left; display:flex; gap:12px; align-items:center; padding:10px 14px; background:none; border:0; border-top:2px solid var(--soft-line); cursor:pointer}
+.results li:first-child button{border-top:0}
+.results button:hover,.results button:focus-visible{background:var(--surface-2)}
+.r-av{font-size:1.5rem}
+.r-name,.r-sub{display:block; overflow-wrap:anywhere}
+.r-name{font-weight:700}
+.r-sub{color:var(--muted); font-size:.88rem}
+.results .none{padding:12px 14px; color:var(--muted)}
+.viewbar{display:flex; flex-wrap:wrap; gap:8px 12px; justify-content:space-between; align-items:center; padding:10px 16px; background:var(--ink); color:var(--bg); font-size:.9rem; font-weight:500}
+.share{margin-top:18px; padding:16px; background:var(--surface); border:2px solid var(--line); border-radius:16px}
+.share h3{font-size:1.05rem; font-weight:800; margin-bottom:4px}
+.share .hint{margin:0 0 10px; color:var(--muted); font-size:.88rem}
+.share .btn{white-space:nowrap}
+[hidden]{display:none !important}
+.upload{position:relative; display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; margin:0 0 14px}
+.upload input[type=file]:focus-visible + label{outline:3px solid var(--ink); outline-offset:2px}
+.upload .status{color:var(--ok); font-size:.88rem; font-weight:500}
+.avatar,.sticker{overflow:hidden}
+.avatar img,.sticker img{width:100%; height:100%; object-fit:cover; display:block}
+@media (max-width:520px){
+  .coin{grid-template-columns:auto 1fr}
+  .coin-price{grid-column:1 / -1; text-align:left; display:flex; gap:12px; align-items:center}
+  .spark{margin:0 0 0 auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>daomeme</h1>
+    <p>Créez votre profil, puis ajoutez votre memecoin pour qu’il s’affiche sur votre page.</p>
+    <span class="demo-note">Démo : aucune transaction réelle, prix et courbes simulés.</span>
+    <div class="search" role="search">
+      <label class="sr" for="search">Rechercher un profil ou un memecoin</label>
+      <span class="s-icon" aria-hidden="true">🔎</span>
+      <input class="input" id="search" type="search" autocomplete="off" placeholder="Rechercher un profil ou un memecoin (ex. DOGEL)">
+      <ul class="results" id="results" hidden></ul>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="editor-col">
+      <section class="panel" aria-labelledby="t-profil">
+        <h2 id="t-profil">Votre profil</h2>
+        <p class="hint">L’aperçu se met à jour pendant que vous écrivez.</p>
+
+        <label class="field"><span>Nom affiché</span>
+          <input class="input" id="p-name" maxlength="30" autocomplete="off" placeholder="Ex. Pépé le Trader">
+        </label>
+        <label class="field"><span>Pseudo</span>
+          <input class="input" id="p-handle" maxlength="20" autocomplete="off" placeholder="pepe_trader">
+        </label>
+        <label class="field"><span>Bio <em class="counter" id="bio-count">0/140</em></span>
+          <textarea class="input" id="p-bio" maxlength="140" placeholder="Une phrase sur vous et votre projet."></textarea>
+        </label>
+
+        <div class="legend" id="lg-avatar">Avatar</div>
+        <div class="picker" id="avatar-picker" role="radiogroup" aria-labelledby="lg-avatar"></div>
+
+        <div class="legend" id="lg-color">Couleur de la page</div>
+        <div class="picker" id="color-picker" role="radiogroup" aria-labelledby="lg-color"></div>
+
+        <div class="legend" id="lg-photo">Photo de profil (optionnel, remplace l’emoji)</div>
+        <div class="upload">
+          <input class="sr" type="file" id="p-photo" accept="image/*">
+          <label class="btn ghost small" for="p-photo">Choisir une image</label>
+          <button type="button" class="btn ghost small" id="p-photo-clear" hidden>Retirer la photo</button>
+          <span class="status" id="p-photo-status" role="status"></span>
+        </div>
+        <p class="msg" id="photo-msg" role="status" aria-live="polite" style="margin:-6px 0 14px"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="t-coin">
+        <h2 id="t-coin">Ajouter un memecoin</h2>
+        <p class="hint">Renseignez les infos publiques de votre token.</p>
+
+        <form id="coin-form" novalidate>
+          <div class="row2">
+            <label class="field"><span>Nom du coin</span>
+              <input class="input" id="c-name" maxlength="30" autocomplete="off" placeholder="Ex. Pepe Moon">
+            </label>
+            <label class="field"><span>Ticker</span>
+              <input class="input" id="c-ticker" maxlength="8" autocomplete="off" placeholder="PEPEM">
+            </label>
+          </div>
+
+          <label class="field"><span>Blockchain</span>
+            <select class="input" id="c-chain">
+              <option value="Solana">Solana</option>
+              <option value="Ethereum">Ethereum</option>
+              <option value="Base">Base</option>
+              <option value="BNB Chain">BNB Chain</option>
+            </select>
+          </label>
+
+          <label class="field"><span>Adresse du contrat</span>
+            <div class="addr-line">
+              <input class="input" id="c-addr" autocomplete="off" spellcheck="false" placeholder="Collez l’adresse du token">
+              <button type="button" class="btn ghost" id="fake-addr">Adresse fictive</button>
+            </div>
+          </label>
+
+          <label class="field"><span>Description <em class="counter" id="desc-count">0/100</em></span>
+            <input class="input" id="c-desc" maxlength="100" autocomplete="off" placeholder="Pourquoi ce coin existe">
+          </label>
+
+          <div class="legend" id="lg-logo">Logo</div>
+          <div class="picker" id="logo-picker" role="radiogroup" aria-labelledby="lg-logo"></div>
+
+          <div class="legend" id="lg-img">Image du coin (optionnel, remplace le logo)</div>
+          <div class="upload">
+            <input class="sr" type="file" id="c-image" accept="image/*">
+            <label class="btn ghost small" for="c-image">Choisir une image</label>
+            <button type="button" class="btn ghost small" id="c-image-clear" hidden>Retirer l’image</button>
+            <span class="status" id="c-image-status" role="status"></span>
+          </div>
+
+          <button class="btn" type="submit">Ajouter à mon profil</button>
+          <p class="msg" id="coin-msg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </div>
+
+    <div class="preview-col">
+      <article class="card" id="card" aria-label="Aperçu de votre profil"></article>
+      <section class="share" aria-labelledby="t-share">
+        <h3 id="t-share">Partager mon profil</h3>
+        <p class="hint">Le lien contient votre profil : quiconque l’ouvre le voit tel qu’il est maintenant.</p>
+        <div class="addr-line">
+          <input class="input" id="share-url" readonly aria-label="Lien de partage" placeholder="Renseignez votre nom pour générer le lien">
+          <button type="button" class="btn small" id="copy-share">Copier le lien</button>
+        </div>
+        <p class="msg" id="share-msg" role="status" aria-live="polite"></p>
+      </section>
+      <div class="foot-actions"><button class="btn ghost" id="reset" type="button">Tout effacer</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var AVATARS=["🐸","🐕","🦍","🚀","🌙","🐱","🦄","🔥","🍌","🐧","🤡","👾"];
+  var LOGOS=["🐸","🐕","🐱","🚀","🌕","🔥","🍌","🦄","💎","🐧","🍀","🥔"];
+  var COLORS=[["#FFD23F","Jaune"],["#FF5C8A","Rose"],["#3DDC97","Menthe"],["#5CC8FF","Ciel"],["#9B7BFF","Violet"]];
+  var KEY="moonfolio-demo-v1";
+  var MAX_COINS=10;
+
+  var state={profile:{name:"",handle:"",bio:"",emoji:"🐸",color:"#FFD23F"},coins:[],logo:"🐸"};
+
+  function load(){
+    try{
+      var raw=localStorage.getItem(KEY);
+      if(!raw) return;
+      var d=JSON.parse(raw);
+      if(d && d.profile) state.profile=Object.assign(state.profile,d.profile);
+      if(d && Array.isArray(d.coins)) state.coins=d.coins.slice(0,MAX_COINS);
+    }catch(e){}
+  }
+  function save(){
+    try{ localStorage.setItem(KEY,JSON.stringify({profile:state.profile,coins:state.coins})); }catch(e){}
+  }
+
+  var $=function(s){return document.querySelector(s)};
+
+  /* ---------- Sélecteurs radio (emoji / couleur) ---------- */
+  function buildPicker(root,items,current,onPick,kind){
+    root.innerHTML="";
+    items.forEach(function(it){
+      var val=Array.isArray(it)?it[0]:it;
+      var label=Array.isArray(it)?it[1]:it;
+      var b=document.createElement("button");
+      b.type="button";
+      b.setAttribute("role","radio");
+      b.setAttribute("aria-label",label);
+      b.setAttribute("aria-checked",String(val===current));
+      b.tabIndex=(val===current)?0:-1;
+      if(kind==="color"){ b.className="swatch"; b.style.background=val; }
+      else { b.className="opt"; b.textContent=val; }
+      b.addEventListener("click",function(){ onPick(val); });
+      b.addEventListener("keydown",function(ev){
+        var keys=["ArrowRight","ArrowDown","ArrowLeft","ArrowUp"];
+        if(keys.indexOf(ev.key)<0) return;
+        ev.preventDefault();
+        var list=Array.prototype.slice.call(root.children);
+        var i=list.indexOf(b);
+        var step=(ev.key==="ArrowRight"||ev.key==="ArrowDown")?1:-1;
+        var n=list[(i+step+list.length)%list.length];
+        n.focus(); n.click();
+        // le clic reconstruit le groupe : on refocalise le bon bouton
+        var re=Array.prototype.slice.call(root.children);
+        var idx=(i+step+list.length)%list.length;
+        if(re[idx]) re[idx].focus();
+      });
+      root.appendChild(b);
+    });
+  }
+  function renderPickers(){
+    buildPicker($("#avatar-picker"),AVATARS,state.profile.emoji,function(v){state.profile.emoji=v;save();renderPickers();renderCard();});
+    buildPicker($("#color-picker"),COLORS,state.profile.color,function(v){state.profile.color=v;save();renderPickers();renderCard();},"color");
+    buildPicker($("#logo-picker"),LOGOS,state.logo,function(v){state.logo=v;renderPickers();});
+  }
+
+  /* ---------- Données simulées (déterministes) ---------- */
+  function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+  function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function market(coin){
+    var seed=hash(coin.ticker+coin.address);
+    var r=rng(seed);
+    var base=(1+Math.floor(r()*9))*Math.pow(10,-(1+Math.floor(r()*6)));
+    var pts=[base],v=base;
+    for(var i=1;i<24;i++){ v=v*(1+(r()-0.46)*0.18); pts.push(v); }
+    var change=(pts[pts.length-1]-pts[0])/pts[0]*100;
+    return {price:pts[pts.length-1],change:change,pts:pts};
+  }
+  function fmtPrice(p){
+    if(p>=1) return "$"+p.toFixed(2);
+    var s=p.toFixed(10).replace(/0+$/,"");
+    return "$"+s;
+  }
+  function spark(pts,up){
+    var w=84,h=28,min=Math.min.apply(null,pts),max=Math.max.apply(null,pts),span=(max-min)||1;
+    var d=pts.map(function(v,i){
+      var x=(i/(pts.length-1))*w, y=h-2-((v-min)/span)*(h-4);
+      return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+    }).join(" ");
+    var col=up?"var(--ok)":"var(--danger)";
+    return '<svg class="spark" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Courbe simulée sur 24 h"><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
+  /* ---------- Aperçu ---------- */
+  var lastAddedId=null;
+  function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+  function shorten(a){return a.length>14?a.slice(0,6)+"…"+a.slice(-4):a;}
+
+  function renderCard(){
+    updateShare(); syncUploads(); var src=viewing||{profile:state.profile,coins:state.coins}; var p=src.profile, card=$('#card');
+    card.innerHTML="";
+    card.style.setProperty("--accent",p.color);
+
+    if(viewing){var vb=el('div','viewbar'); vb.appendChild(el('span',null,viewing.demo?'Profil de démonstration':'Profil partagé')); var back=el('button','btn small','Retour à mon profil'); back.type='button'; back.addEventListener('click',function(){showProfile(null);}); vb.appendChild(back); card.appendChild(vb);}
+    card.appendChild(el('div','banner'));
+    var who=el("div","who");
+    who.appendChild(imgBox('avatar',p.emoji,p.photo));
+    var name=el("h2",p.name?"":"placeholder",p.name||"Votre nom");
+    who.appendChild(name);
+    who.appendChild(el("div","handle",p.handle?"@"+p.handle:"@votre-pseudo"));
+    who.appendChild(el("p","bio"+(p.bio?"":" placeholder"),p.bio||"Votre bio apparaîtra ici."));
+    card.appendChild(who);
+
+    var n=src.coins.length;
+    card.appendChild(el("div","count",n===0?"Aucun memecoin":(n+" memecoin"+(n>1?"s":""))));
+
+    if(n===0){
+      var empty=el("div","empty");
+      empty.appendChild(el('strong',null,viewing?'Vitrine vide':'Votre vitrine est vide'));
+      empty.appendChild(document.createTextNode(viewing?'Ce profil n’a pas encore ajouté de memecoin.':'Remplissez le formulaire « Ajouter un memecoin » pour afficher votre premier token.'));
+      card.appendChild(empty);
+      return;
+    }
+
+    var ul=el("ul","coins");
+    src.coins.forEach(function(c,i){
+      var m=market(c), up=m.change>=0;
+      var li=el("li","coin"+(c.id===lastAddedId?" pop":""));
+
+      var st=imgBox('sticker',c.logo,c.image);
+      st.style.setProperty("--tilt",((i%2?5:-6))+"deg");
+      li.appendChild(st);
+
+      var main=el("div","coin-main");
+      var h3=el("h3",null,c.name);
+      h3.appendChild(el("span","ticker","$"+c.ticker));
+      main.appendChild(h3);
+      var meta=el("div","meta");
+      meta.appendChild(el("span","pill",c.chain));
+      meta.appendChild(el("span",null,shorten(c.address)));
+      main.appendChild(meta);
+      if(c.desc) main.appendChild(el("p","coin-desc",c.desc));
+      var act=el("div","coin-actions");
+      var copy=el("button","btn ghost small","Copier l’adresse"); copy.type="button";
+      copy.addEventListener("click",function(){copyAddr(c.address);});
+      var del=el("button","btn ghost small","Retirer"); del.type="button";
+      del.setAttribute("aria-label","Retirer "+c.name+" du profil");
+      del.addEventListener("click",function(){
+        state.coins=state.coins.filter(function(x){return x.id!==c.id;});
+        lastAddedId=null; save(); renderCard();
+        setMsg("« "+c.name+" » retiré du profil.","ok");
+      });
+      act.appendChild(copy); if(!viewing) act.appendChild(del);
+      main.appendChild(act);
+      li.appendChild(main);
+
+      var pr=el("div","coin-price");
+      var txt=el("div");
+      txt.appendChild(el("div","p",fmtPrice(m.price)));
+      txt.appendChild(el("div","chg "+(up?"up":"down"),(up?"+":"")+m.change.toFixed(1)+" % (24 h)"));
+      pr.appendChild(txt);
+      var sp=el("span"); sp.innerHTML=spark(m.pts,up); pr.appendChild(sp);
+      li.appendChild(pr);
+
+      ul.appendChild(li);
+    });
+    card.appendChild(ul);
+  }
+
+  /* ---------- Messages ---------- */
+  function setMsg(t,kind){var m=$("#coin-msg");m.textContent=t;m.className="msg "+(kind||"");}
+  function copyAddr(a){
+    try{
+      navigator.clipboard.writeText(a).then(function(){setMsg("Adresse copiée.","ok");},function(){setMsg("Copie bloquée par le navigateur. Sélectionnez l’adresse à la main : "+a,"err");});
+    }catch(e){ setMsg("Copie indisponible ici. Adresse : "+a,"err"); }
+  }
+
+  /* ---------- Adresses fictives ---------- */
+  var B58="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  function rand(chars,n){var s="";for(var i=0;i<n;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s;}
+  function fakeAddress(chain){return chain==="Solana"?rand(B58,44):"0x"+rand("0123456789abcdef",40);}
+  function validAddress(chain,a){
+    if(chain==="Solana") return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a);
+    return /^0x[a-fA-F0-9]{40}$/.test(a);
+  }
+
+  /* ---------- Événements profil ---------- */
+  function bindProfile(){
+    var n=$("#p-name"),h=$("#p-handle"),b=$("#p-bio");
+    n.value=state.profile.name; h.value=state.profile.handle; b.value=state.profile.bio;
+    $("#bio-count").textContent=b.value.length+"/140";
+    n.addEventListener("input",function(){state.profile.name=n.value.trim();save();renderCard();});
+    h.addEventListener("input",function(){
+      var clean=h.value.toLowerCase().replace(/[^a-z0-9_]/g,"");
+      if(clean!==h.value) h.value=clean;
+      state.profile.handle=clean; save(); renderCard();
+    });
+    b.addEventListener("input",function(){
+      state.profile.bio=b.value.trim(); $("#bio-count").textContent=b.value.length+"/140"; save(); renderCard();
+    });
+  }
+
+  /* ---------- Événements coin ---------- */
+  function bindCoin(){
+    var chain=$("#c-chain"),addr=$("#c-addr"),tk=$("#c-ticker"),desc=$("#c-desc");
+    tk.addEventListener("input",function(){tk.value=tk.value.toUpperCase().replace(/[^A-Z0-9]/g,"");});
+    desc.addEventListener("input",function(){$("#desc-count").textContent=desc.value.length+"/100";});
+    $("#fake-addr").addEventListener("click",function(){addr.value=fakeAddress(chain.value);addr.focus();});
+
+    $("#coin-form").addEventListener("submit",function(ev){
+      ev.preventDefault();
+      var name=$("#c-name").value.trim(), ticker=tk.value.trim(), a=addr.value.trim(), ch=chain.value;
+      if(state.coins.length>=MAX_COINS) return setMsg("Maximum "+MAX_COINS+" memecoins par profil.","err");
+      if(!name) return setMsg("Entrez le nom du coin.","err");
+      if(ticker.length<2) return setMsg("Le ticker doit contenir 2 à 8 caractères (lettres ou chiffres).","err");
+      if(state.coins.some(function(c){return c.ticker===ticker;})) return setMsg("Le ticker $"+ticker+" est déjà sur votre profil.","err");
+      if(!a) return setMsg("Entrez l’adresse du contrat, ou générez une adresse fictive.","err");
+      if(!validAddress(ch,a)){
+        return setMsg(ch==="Solana"
+          ? "Adresse Solana invalide : 32 à 44 caractères en base58."
+          : "Adresse invalide pour "+ch+" : elle doit commencer par 0x suivi de 40 caractères hexadécimaux.","err");
+      }
+      var coin={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,ticker:ticker,chain:ch,address:a,desc:desc.value.trim(),logo:state.logo,image:state.coinImage||''};
+      state.coins.push(coin); lastAddedId=coin.id; save(); renderCard();
+      $("#coin-form").reset(); $("#desc-count").textContent="0/100"; state.coinImage='';
+      setMsg("« "+name+" » ajouté à votre profil.","ok");
+    });
+  }
+
+  $("#reset").addEventListener("click",function(){
+    if(!window.confirm("Effacer le profil et tous les memecoins ?")) return;
+    state.profile={name:"",handle:"",bio:"",emoji:"🐸",color:"#FFD23F"}; state.coins=[]; state.coinImage=''; lastAddedId=null;
+    save(); $("#p-name").value=""; $("#p-handle").value=""; $("#p-bio").value=""; $("#bio-count").textContent="0/140";
+    renderPickers(); renderCard(); setMsg("","");
+  });
+
+  /* ---------- Partage ---------- */
+  var viewing=null;
+  var CHAINS=['Solana','Ethereum','Base','BNB Chain'];
+  function b64e(s){return btoa(unescape(encodeURIComponent(s))).split('+').join('-').split('/').join('_').split('=').join('');}
+  function b64d(s){s=s.split('-').join('+').split('_').join('/'); while(s.length%4) s+='='; return decodeURIComponent(escape(atob(s)));}
+  function baseUrl(){return location.href.split('#')[0];}
+  function shareUrl(){
+    var pp=state.profile; var data={profile:{name:pp.name,handle:pp.handle,bio:pp.bio,emoji:pp.emoji,color:pp.color},coins:state.coins.map(function(c){return {name:c.name,ticker:c.ticker,chain:c.chain,address:c.address,desc:c.desc,logo:c.logo};})};
+    return baseUrl()+'#p='+b64e(JSON.stringify(data));
+  }
+  function str(v,n){return typeof v==='string'?v.slice(0,n):'';}
+  function sanitize(d){
+    if(!d||typeof d!=='object'||!d.profile||typeof d.profile!=='object') return null;
+    var p=d.profile, cols=COLORS.map(function(c){return c[0];});
+    var out={profile:{name:str(p.name,30),handle:str(p.handle,20).toLowerCase().replace(/[^a-z0-9_]/g,''),bio:str(p.bio,140),emoji:str(p.emoji,8)||'🐸',color:cols.indexOf(p.color)>=0?p.color:cols[0]},coins:[]};
+    (Array.isArray(d.coins)?d.coins:[]).slice(0,MAX_COINS).forEach(function(c,i){
+      if(!c||typeof c!=='object') return;
+      out.coins.push({id:'s'+i,name:str(c.name,30),ticker:str(c.ticker,8).toUpperCase().replace(/[^A-Z0-9]/g,''),chain:CHAINS.indexOf(c.chain)>=0?c.chain:'Solana',address:str(c.address,64),desc:str(c.desc,100),logo:str(c.logo,8)||'🪙'});
+    });
+    return out;
+  }
+  function readHash(){
+    var m=/^#p=([A-Za-z0-9_-]+)$/.exec(location.hash);
+    if(!m) return null;
+    try{return sanitize(JSON.parse(b64d(m[1])));}catch(e){return null;}
+  }
+  function updateShare(){
+    var inp=$('#share-url'), btn=$('#copy-share');
+    if(!state.profile.name){inp.value=''; btn.disabled=true; return;}
+    inp.value=shareUrl(); btn.disabled=false;
+  }
+  function showProfile(e){
+    viewing=e;
+    if(!e){try{history.replaceState(null,'',baseUrl());}catch(x){}}
+    renderCard();
+  }
+  $('#copy-share').addEventListener('click',function(){
+    var inp=$('#share-url'), m=$('#share-msg');
+    inp.focus(); inp.select();
+    function fail(){m.textContent='Lien sélectionné : copiez-le avec Ctrl/Cmd + C.'; m.className='msg';}
+    try{navigator.clipboard.writeText(inp.value).then(function(){m.textContent='Lien copié.'; m.className='msg ok';},fail);}catch(e){fail();}
+  });
+  function leaveView(){ if(viewing){showProfile(null);} }
+  var edCol=document.querySelector('.editor-col');
+  edCol.addEventListener('input',leaveView,true);
+  edCol.addEventListener('click',leaveView,true);
+  window.addEventListener('hashchange',function(){var d=readHash(); viewing=d||null; renderCard();});
+
+  /* ---------- Recherche ---------- */
+  function demoAddr(chain,seed){
+    var r=rng(hash(seed)), sol=chain==='Solana', set=sol?B58:'0123456789abcdef', n=sol?44:40, s='';
+    for(var i=0;i<n;i++) s+=set[Math.floor(r()*set.length)];
+    return sol?s:'0x'+s;
+  }
+  function demoProfiles(){
+    function c(name,ticker,chain,desc,logo){return {id:'d'+ticker,name:name,ticker:ticker,chain:chain,address:demoAddr(chain,ticker),desc:desc,logo:logo};}
+    return [
+      {demo:true,profile:{name:'Dogelord',handle:'dogelord',bio:'Je promets de ne jamais vendre. Probablement.',emoji:'🐕',color:'#FFD23F'},coins:[c('Doge Lord','DOGEL','Solana','Le chien qui a mangé la roadmap.','🐕'),c('Bark Base','BARK','Base','Il aboie sur Base.','🦴')]},
+      {demo:true,profile:{name:'Madame Grenouille',handle:'madame_grenouille',bio:'Saute avant les autres.',emoji:'🐸',color:'#3DDC97'},coins:[c('Froge','FROGE','Ethereum','Une grenouille, un contrat, zéro plan.','🐸')]},
+      {demo:true,profile:{name:'Banane Capital',handle:'banane_capital',bio:'Fonds d’investissement 100 % bananes.',emoji:'🍌',color:'#FF5C8A'},coins:[c('Nana','NANA','BNB Chain','Mûrit plus vite que le marché.','🍌'),c('Split','SPLIT','Solana','Pour les gros appétits.','🍨')]}
+    ];
+  }
+  function directory(){
+    var list=demoProfiles();
+    if(state.profile.name||state.profile.handle) list.unshift({own:true,profile:state.profile,coins:state.coins});
+    return list;
+  }
+  function runSearch(){
+    var raw=$('#search').value.trim(), q=raw.toLowerCase().replace(/^[@$]/,''), ul=$('#results');
+    ul.innerHTML='';
+    if(!q){ul.hidden=true; return;}
+    var hits=directory().filter(function(e){
+      var hay=[e.profile.name,e.profile.handle].concat(e.coins.map(function(c){return c.name+' '+c.ticker+' '+c.chain;})).join(' ').toLowerCase();
+      return hay.indexOf(q)>=0;
+    }).slice(0,8);
+    ul.hidden=false;
+    if(!hits.length){ul.appendChild(el('li','none','Aucun résultat pour « '+raw+' ».')); return;}
+    hits.forEach(function(e){
+      var li=el('li'), b=el('button'); b.type='button';
+      b.appendChild(el('span','r-av',e.profile.emoji));
+      var t=el('span');
+      t.appendChild(el('span','r-name',(e.profile.name||'Sans nom')+(e.own?' (vous)':'')));
+      var tick=e.coins.map(function(c){return '$'+c.ticker;}).join(' ');
+      t.appendChild(el('span','r-sub',(e.profile.handle?'@'+e.profile.handle:'')+(tick?(e.profile.handle?' · ':'')+tick:'')));
+      b.appendChild(t);
+      b.addEventListener('click',function(){
+        $('#search').value=''; runSearch();
+        showProfile(e.own?null:e);
+        $('#card').scrollIntoView({block:'start'});
+      });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+  $('#search').addEventListener('input',runSearch);
+  $('#search').addEventListener('keydown',function(ev){if(ev.key==='Escape'){$('#search').value=''; runSearch();}});
+
+  /* ---------- Images (photo de profil, image du coin) ---------- */
+  function imgBox(cls,emoji,img){
+    var d=el('div',cls);
+    if(img){var i=document.createElement('img'); i.src=img; i.alt=''; d.appendChild(i);} else d.textContent=emoji;
+    return d;
+  }
+  function syncUploads(){
+    $('#p-photo-clear').hidden=!state.profile.photo;
+    $('#p-photo-status').textContent=state.profile.photo?'Photo ajoutée.':'';
+    $('#c-image-clear').hidden=!state.coinImage;
+    $('#c-image-status').textContent=state.coinImage?'Image prête.':'';
+  }
+  function readImage(file,size,ok,fail){
+    if(!file) return;
+    if(file.type.indexOf('image/')!==0) return fail('Ce fichier n’est pas une image.');
+    if(file.size>8*1024*1024) return fail('Image trop lourde (8 Mo maximum).');
+    var fr=new FileReader();
+    fr.onerror=function(){fail('Lecture du fichier impossible.');};
+    fr.onload=function(){
+      var im=new Image();
+      im.onerror=function(){fail('Format d’image non pris en charge.');};
+      im.onload=function(){
+        var s=Math.min(im.width,im.height), cv=document.createElement('canvas');
+        cv.width=size; cv.height=size;
+        cv.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,size,size);
+        ok(cv.toDataURL('image/webp',0.85));
+      };
+      im.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+  $('#p-photo').addEventListener('change',function(ev){
+    var inp=ev.target, m=$('#photo-msg');
+    readImage(inp.files[0],192,function(d){
+      inp.value=''; state.profile.photo=d; save(); m.textContent=''; m.className='msg'; renderCard();
+    },function(t){inp.value=''; m.textContent=t; m.className='msg err';});
+  });
+  $('#p-photo-clear').addEventListener('click',function(){state.profile.photo=''; save(); $('#photo-msg').textContent=''; renderCard();});
+  $('#c-image').addEventListener('change',function(ev){
+    var inp=ev.target;
+    readImage(inp.files[0],128,function(d){
+      inp.value=''; state.coinImage=d; setMsg('Image prête : elle sera utilisée à l’ajout du coin.','ok'); syncUploads();
+    },function(t){inp.value=''; setMsg(t,'err');});
+  });
+  $('#c-image-clear').addEventListener('click',function(){state.coinImage=''; setMsg('',''); syncUploads();});
+
+  var first=readHash(); if(first) viewing=first;
+  load(); bindProfile(); bindCoin(); renderPickers(); renderCard();
+})();
+</script>
+</body>
+</html>
