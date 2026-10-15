@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>daomeme – profil et memecoin</title>
+<meta name="google-site-verification" content="JQZyseDG1wt_0Fg810RavOHYQxetd7g3icLdovm9Rpw" />
+<meta name="description" content="daomeme : créez votre profil, ajoutez votre memecoin et partagez votre page.">
+<meta name="theme-color" content="#EEEBFF">
+<meta property="og:type" content="website">
+<meta property="og:title" content="daomeme – profil et memecoin">
+<meta property="og:description" content="Créez votre profil, ajoutez votre memecoin et partagez votre page.">
+<meta property="og:url" content="https://godwin2007-prog.github.io/Market/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐸%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -14,19 +23,19 @@
   color-scheme:light;
   --bg:#EEEBFF; --surface:#FFFFFF; --surface-2:#F6F4FF; --ink:#1A1646; --muted:#5B5886;
   --line:#1A1646; --soft-line:#CFCAF2; --danger:#C2184B; --ok:#0B7A55; --on-accent:#1A1646;
-  --shadow:#1A1646;
+  --shadow:#1A1646; --field-line:#8A84C4;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --bg:#120F36; --surface:#1D1950; --surface-2:#26216A; --ink:#F4F1FF; --muted:#ADA9DB;
-    --line:#8F89E8; --soft-line:#3A3485; --danger:#FF7FA3; --ok:#5EE0AE; --shadow:#07061D;
+    --line:#8F89E8; --soft-line:#3A3485; --danger:#FF7FA3; --ok:#5EE0AE; --shadow:#07061D; --field-line:#7E78D8;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#120F36; --surface:#1D1950; --surface-2:#26216A; --ink:#F4F1FF; --muted:#ADA9DB;
-  --line:#8F89E8; --soft-line:#3A3485; --danger:#FF7FA3; --ok:#5EE0AE; --shadow:#07061D;
+  --line:#8F89E8; --soft-line:#3A3485; --danger:#FF7FA3; --ok:#5EE0AE; --shadow:#07061D; --field-line:#7E78D8;
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
@@ -42,7 +51,6 @@ button,input,select,textarea{font:inherit; color:inherit}
 header.top{margin-bottom:26px}
 header.top h1{font-size:clamp(2rem,5vw,3rem); font-weight:800; letter-spacing:-.02em}
 header.top p{margin:8px 0 0; color:var(--muted); max-width:56ch}
-.demo-note{display:inline-block; margin-top:12px; padding:6px 12px; border:2px dashed var(--line); border-radius:10px; font-size:.9rem}
 
 .layout{display:grid; gap:24px; grid-template-columns:1fr; align-items:start}
 @media (min-width:880px){ .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .preview-col{position:sticky; top:calc(16px + env(safe-area-inset-top,0px))} }
@@ -54,7 +62,7 @@ header.top p{margin:8px 0 0; color:var(--muted); max-width:56ch}
 label.field{display:block; margin-bottom:14px}
 label.field > span, .legend{display:block; font-weight:700; font-size:.92rem; margin-bottom:5px}
 .input, select.input, textarea.input{
-  width:100%; padding:10px 12px; background:var(--surface-2); border:2px solid var(--soft-line); border-radius:10px;
+  width:100%; padding:10px 12px; background:var(--surface-2); border:2px solid var(--field-line); border-radius:10px;
 }
 .input:focus{border-color:var(--ink)}
 textarea.input{resize:vertical; min-height:74px}
@@ -65,10 +73,10 @@ textarea.input{resize:vertical; min-height:74px}
 .picker{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; padding:0; border:0}
 .picker .opt{
   width:44px; height:44px; display:grid; place-items:center; font-size:1.4rem; cursor:pointer;
-  background:var(--surface-2); border:2px solid var(--soft-line); border-radius:12px;
+  background:var(--surface-2); border:2px solid var(--field-line); border-radius:12px;
 }
 .picker .opt[aria-checked="true"]{border-color:var(--ink); background:var(--surface); box-shadow:3px 3px 0 var(--shadow)}
-.swatch{width:36px; height:36px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0}
+.swatch{width:44px; height:44px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0}
 .swatch[aria-checked="true"]{box-shadow:0 0 0 3px var(--surface), 0 0 0 5px var(--ink)}
 
 .btn{
@@ -79,7 +87,7 @@ textarea.input{resize:vertical; min-height:74px}
 .btn:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--shadow)}
 .btn.ghost{background:transparent; color:var(--ink); box-shadow:none; border-color:var(--soft-line); padding:8px 12px; font-size:.9rem}
 .btn.ghost:hover{transform:none; border-color:var(--ink)}
-.btn.small{padding:6px 10px; font-size:.85rem; box-shadow:none}
+.btn.small{padding:10px 12px; font-size:.85rem; box-shadow:none}
 .addr-line{display:flex; gap:8px}
 .addr-line .input{min-width:0}
 .msg{min-height:1.4em; margin:10px 0 0; font-size:.92rem; font-weight:500}
@@ -95,7 +103,7 @@ textarea.input{resize:vertical; min-height:74px}
 }
 .who h2{margin-top:10px; font-size:1.7rem; font-weight:800; overflow-wrap:anywhere}
 .handle{color:var(--muted); font-weight:500; overflow-wrap:anywhere}
-.bio{margin:10px 0 0; overflow-wrap:anywhere}
+.bio{margin:10px 0 0; overflow-wrap:anywhere; white-space:pre-line}
 .placeholder{color:var(--muted)}
 .count{padding:10px 20px; border-top:2px solid var(--line); font-weight:700; background:var(--surface-2)}
 
@@ -121,6 +129,11 @@ textarea.input{resize:vertical; min-height:74px}
 .coin-price .p{font-weight:800}
 .chg.up{color:var(--ok)} .chg.down{color:var(--danger)}
 .chg{font-weight:700; font-size:.88rem}
+.sim{font-size:.75rem; color:var(--muted)}
+.auth{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px}
+.auth .input{max-width:260px}
+.auth .msg{flex-basis:100%; margin:0}
+.explore{margin-top:8px}
 .spark{display:block; margin:4px 0 0 auto}
 .empty{padding:26px 20px; color:var(--muted)}
 .empty strong{display:block; color:var(--ink); margin-bottom:2px}
@@ -161,12 +174,18 @@ textarea.input{resize:vertical; min-height:74px}
   <header class="top">
     <h1>daomeme</h1>
     <p>Créez votre profil, puis ajoutez votre memecoin pour qu’il s’affiche sur votre page.</p>
-    <span class="demo-note">Démo : aucune transaction réelle, prix et courbes simulés.</span>
     <div class="search" role="search">
       <label class="sr" for="search">Rechercher un profil ou un memecoin</label>
       <span class="s-icon" aria-hidden="true">🔎</span>
       <input class="input" id="search" type="search" autocomplete="off" placeholder="Rechercher un profil ou un memecoin (ex. DOGEL)">
       <ul class="results" id="results" hidden></ul>
+    </div>
+    <div class="auth" id="auth" hidden>
+      <span id="auth-status"></span>
+      <input class="input" id="auth-email" type="email" autocomplete="email" placeholder="votre@email.com" aria-label="Votre email">
+      <button class="btn small" type="button" id="auth-login">Recevoir un lien de connexion</button>
+      <button class="btn ghost small" type="button" id="auth-logout" hidden>Se déconnecter</button>
+      <p class="msg" id="auth-msg" role="status" aria-live="polite"></p>
     </div>
   </header>
 
@@ -182,7 +201,7 @@ textarea.input{resize:vertical; min-height:74px}
         <label class="field"><span>Pseudo</span>
           <input class="input" id="p-handle" maxlength="20" autocomplete="off" placeholder="pepe_trader">
         </label>
-        <label class="field"><span>Bio <em class="counter" id="bio-count">0/140</em></span>
+        <label class="field"><span>Bio <em class="counter" id="bio-count" aria-hidden="true">0/140</em></span>
           <textarea class="input" id="p-bio" maxlength="140" placeholder="Une phrase sur vous et votre projet."></textarea>
         </label>
 
@@ -225,14 +244,14 @@ textarea.input{resize:vertical; min-height:74px}
             </select>
           </label>
 
-          <label class="field"><span>Adresse du contrat</span>
+          <div class="field"><label class="legend" for="c-addr">Adresse du contrat</label>
             <div class="addr-line">
               <input class="input" id="c-addr" autocomplete="off" spellcheck="false" placeholder="Collez l’adresse du token">
               <button type="button" class="btn ghost" id="fake-addr">Adresse fictive</button>
             </div>
-          </label>
+          </div>
 
-          <label class="field"><span>Description <em class="counter" id="desc-count">0/100</em></span>
+          <label class="field"><span>Description <em class="counter" id="desc-count" aria-hidden="true">0/100</em></span>
             <input class="input" id="c-desc" maxlength="100" autocomplete="off" placeholder="Pourquoi ce coin existe">
           </label>
 
@@ -247,7 +266,8 @@ textarea.input{resize:vertical; min-height:74px}
             <span class="status" id="c-image-status" role="status"></span>
           </div>
 
-          <button class="btn" type="submit">Ajouter à mon profil</button>
+          <button class="btn" type="submit" id="c-submit">Ajouter à mon profil</button>
+          <button class="btn ghost" type="button" id="c-cancel" hidden>Annuler</button>
           <p class="msg" id="coin-msg" role="status" aria-live="polite"></p>
         </form>
       </section>
@@ -255,11 +275,12 @@ textarea.input{resize:vertical; min-height:74px}
 
     <div class="preview-col">
       <article class="card" id="card" aria-label="Aperçu de votre profil"></article>
+      <p class="msg" id="card-msg" role="status" aria-live="polite"></p>
       <section class="share" aria-labelledby="t-share">
         <h3 id="t-share">Partager mon profil</h3>
-        <p class="hint">Le lien contient votre profil : quiconque l’ouvre le voit tel qu’il est maintenant.</p>
+        <p class="hint">Le lien contient votre profil et vos memecoins (sans les photos ni les images importées). Quiconque l’ouvre le voit tel qu’il est maintenant.</p>
         <div class="addr-line">
-          <input class="input" id="share-url" readonly aria-label="Lien de partage" placeholder="Renseignez votre nom pour générer le lien">
+          <input class="input" id="share-url" readonly aria-label="Lien de partage" placeholder="Le lien apparaît ici dès que vous avez saisi votre nom">
           <button type="button" class="btn small" id="copy-share">Copier le lien</button>
         </div>
         <p class="msg" id="share-msg" role="status" aria-live="polite"></p>
@@ -267,17 +288,25 @@ textarea.input{resize:vertical; min-height:74px}
       <div class="foot-actions"><button class="btn ghost" id="reset" type="button">Tout effacer</button></div>
     </div>
   </div>
+  <section class="panel explore" id="explore" hidden aria-labelledby="t-explore">
+    <h2 id="t-explore">Derniers memecoins publiés</h2>
+    <p class="hint">Ajoutés par tous les visiteurs connectés.</p>
+    <ul class="coins" id="explore-list"></ul>
+  </section>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
+  /* Back-end : collez ici l’URL du projet et la clé « anon » de Supabase (Settings > API). Vide = mode local. */
+  var SB_URL="", SB_KEY="", sb=null, user=null, published=false;
   var AVATARS=["🐸","🐕","🦍","🚀","🌙","🐱","🦄","🔥","🍌","🐧","🤡","👾"];
   var LOGOS=["🐸","🐕","🐱","🚀","🌕","🔥","🍌","🦄","💎","🐧","🍀","🥔"];
   var COLORS=[["#FFD23F","Jaune"],["#FF5C8A","Rose"],["#3DDC97","Menthe"],["#5CC8FF","Ciel"],["#9B7BFF","Violet"]];
   var KEY="moonfolio-demo-v1";
   var MAX_COINS=10;
 
-  var state={profile:{name:"",handle:"",bio:"",emoji:"🐸",color:"#FFD23F"},coins:[],logo:"🐸"};
+  var state={profile:{name:"",handle:"",bio:"",emoji:"🐸",color:"#FFD23F"},coins:[],logo:"🐸",editId:null};
 
   function load(){
     try{
@@ -290,6 +319,7 @@ textarea.input{resize:vertical; min-height:74px}
   }
   function save(){
     try{ localStorage.setItem(KEY,JSON.stringify({profile:state.profile,coins:state.coins})); }catch(e){}
+    if(typeof schedulePush==="function") schedulePush();
   }
 
   var $=function(s){return document.querySelector(s)};
@@ -327,9 +357,11 @@ textarea.input{resize:vertical; min-height:74px}
     });
   }
   function renderPickers(){
+    var ae=document.activeElement, rid=(ae&&ae.getAttribute&&ae.getAttribute("role")==="radio"&&ae.parentNode)?ae.parentNode.id:"";
     buildPicker($("#avatar-picker"),AVATARS,state.profile.emoji,function(v){state.profile.emoji=v;save();renderPickers();renderCard();});
     buildPicker($("#color-picker"),COLORS,state.profile.color,function(v){state.profile.color=v;save();renderPickers();renderCard();},"color");
     buildPicker($("#logo-picker"),LOGOS,state.logo,function(v){state.logo=v;renderPickers();});
+    if(rid){var cur=document.querySelector("#"+rid+" [aria-checked=\"true\"]"); if(cur) cur.focus();}
   }
 
   /* ---------- Données simulées (déterministes) ---------- */
@@ -367,9 +399,13 @@ textarea.input{resize:vertical; min-height:74px}
   function renderCard(){
     updateShare(); syncUploads(); var src=viewing||{profile:state.profile,coins:state.coins}; var p=src.profile, card=$('#card');
     card.innerHTML="";
+    var popId=lastAddedId; lastAddedId=null;
+    $("#reset").hidden=!!viewing;
+    card.setAttribute("aria-label",viewing?"Profil affiché":"Aperçu de votre profil");
     card.style.setProperty("--accent",p.color);
+    if(badLink&&!viewing){var eb=el("div","viewbar","Ce lien de partage est invalide ou incomplet."); eb.setAttribute("role","alert"); card.appendChild(eb);}
 
-    if(viewing){var vb=el('div','viewbar'); vb.appendChild(el('span',null,viewing.demo?'Profil de démonstration':'Profil partagé')); var back=el('button','btn small','Retour à mon profil'); back.type='button'; back.addEventListener('click',function(){showProfile(null);}); vb.appendChild(back); card.appendChild(vb);}
+    if(viewing){var vb=el('div','viewbar'); vb.appendChild(el('span',null,viewing.demo?'Profil de démonstration':(viewing.remote?'Profil public':'Profil partagé'))); var back=el('button','btn small','Retour à mon profil'); back.type='button'; back.addEventListener('click',function(){showProfile(null);}); vb.appendChild(back); card.appendChild(vb);}
     card.appendChild(el('div','banner'));
     var who=el("div","who");
     who.appendChild(imgBox('avatar',p.emoji,p.photo));
@@ -393,7 +429,7 @@ textarea.input{resize:vertical; min-height:74px}
     var ul=el("ul","coins");
     src.coins.forEach(function(c,i){
       var m=market(c), up=m.change>=0;
-      var li=el("li","coin"+(c.id===lastAddedId?" pop":""));
+      var li=el("li","coin"+(c.id===popId?" pop":""));
 
       var st=imgBox('sticker',c.logo,c.image);
       st.style.setProperty("--tilt",((i%2?5:-6))+"deg");
@@ -411,14 +447,17 @@ textarea.input{resize:vertical; min-height:74px}
       var act=el("div","coin-actions");
       var copy=el("button","btn ghost small","Copier l’adresse"); copy.type="button";
       copy.addEventListener("click",function(){copyAddr(c.address);});
+      var ed=el("button","btn ghost small","Modifier"); ed.type="button"; ed.setAttribute("aria-label","Modifier "+c.name);
+      ed.addEventListener("click",function(){startEdit(c);});
       var del=el("button","btn ghost small","Retirer"); del.type="button";
       del.setAttribute("aria-label","Retirer "+c.name+" du profil");
       del.addEventListener("click",function(){
         state.coins=state.coins.filter(function(x){return x.id!==c.id;});
+        if(state.editId===c.id) endEdit();
         lastAddedId=null; save(); renderCard();
-        setMsg("« "+c.name+" » retiré du profil.","ok");
+        cardMsg("« "+c.name+" » retiré du profil.","ok");
       });
-      act.appendChild(copy); if(!viewing) act.appendChild(del);
+      act.appendChild(copy); if(!viewing){act.appendChild(ed); act.appendChild(del);}
       main.appendChild(act);
       li.appendChild(main);
 
@@ -426,6 +465,7 @@ textarea.input{resize:vertical; min-height:74px}
       var txt=el("div");
       txt.appendChild(el("div","p",fmtPrice(m.price)));
       txt.appendChild(el("div","chg "+(up?"up":"down"),(up?"+":"")+m.change.toFixed(1)+" % (24 h)"));
+      txt.appendChild(el("div","sim","prix simulé"));
       pr.appendChild(txt);
       var sp=el("span"); sp.innerHTML=spark(m.pts,up); pr.appendChild(sp);
       li.appendChild(pr);
@@ -437,10 +477,21 @@ textarea.input{resize:vertical; min-height:74px}
 
   /* ---------- Messages ---------- */
   function setMsg(t,kind){var m=$("#coin-msg");m.textContent=t;m.className="msg "+(kind||"");}
+  var cardTimer=null;
+  function cardMsg(t,kind){var m=$("#card-msg"); m.textContent=t; m.className="msg "+(kind||""); clearTimeout(cardTimer); cardTimer=setTimeout(function(){m.textContent="";},4000);}
+  function endEdit(){state.editId=null; $("#c-submit").textContent="Ajouter à mon profil"; $("#c-cancel").hidden=true;}
+  function startEdit(c){
+    state.editId=c.id; state.logo=c.logo; state.coinImage=c.image||"";
+    $("#c-name").value=c.name; $("#c-ticker").value=c.ticker; $("#c-chain").value=c.chain; $("#c-addr").value=c.address; $("#c-desc").value=c.desc||"";
+    $("#desc-count").textContent=(c.desc||"").length+"/100";
+    $("#c-submit").textContent="Enregistrer les modifications"; $("#c-cancel").hidden=false;
+    renderPickers(); syncUploads(); setMsg("Modification de « "+c.name+" ».","ok");
+    $("#c-name").focus(); $("#coin-form").scrollIntoView({block:"center"});
+  }
   function copyAddr(a){
     try{
-      navigator.clipboard.writeText(a).then(function(){setMsg("Adresse copiée.","ok");},function(){setMsg("Copie bloquée par le navigateur. Sélectionnez l’adresse à la main : "+a,"err");});
-    }catch(e){ setMsg("Copie indisponible ici. Adresse : "+a,"err"); }
+      navigator.clipboard.writeText(a).then(function(){cardMsg("Adresse copiée.","ok");},function(){cardMsg("Copie bloquée par le navigateur. Sélectionnez l’adresse à la main : "+a,"err");});
+    }catch(e){ cardMsg("Copie indisponible ici. Adresse : "+a,"err"); }
   }
 
   /* ---------- Adresses fictives ---------- */
@@ -478,32 +529,35 @@ textarea.input{resize:vertical; min-height:74px}
     $("#coin-form").addEventListener("submit",function(ev){
       ev.preventDefault();
       var name=$("#c-name").value.trim(), ticker=tk.value.trim(), a=addr.value.trim(), ch=chain.value;
-      if(state.coins.length>=MAX_COINS) return setMsg("Maximum "+MAX_COINS+" memecoins par profil.","err");
+      if(!state.editId&&state.coins.length>=MAX_COINS) return setMsg("Maximum "+MAX_COINS+" memecoins par profil.","err");
       if(!name) return setMsg("Entrez le nom du coin.","err");
       if(ticker.length<2) return setMsg("Le ticker doit contenir 2 à 8 caractères (lettres ou chiffres).","err");
-      if(state.coins.some(function(c){return c.ticker===ticker;})) return setMsg("Le ticker $"+ticker+" est déjà sur votre profil.","err");
+      if(state.coins.some(function(c){return c.ticker===ticker&&c.id!==state.editId;})) return setMsg("Le ticker $"+ticker+" est déjà sur votre profil.","err");
       if(!a) return setMsg("Entrez l’adresse du contrat, ou générez une adresse fictive.","err");
       if(!validAddress(ch,a)){
         return setMsg(ch==="Solana"
           ? "Adresse Solana invalide : 32 à 44 caractères en base58."
           : "Adresse invalide pour "+ch+" : elle doit commencer par 0x suivi de 40 caractères hexadécimaux.","err");
       }
-      var coin={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,ticker:ticker,chain:ch,address:a,desc:desc.value.trim(),logo:state.logo,image:state.coinImage||''};
-      state.coins.push(coin); lastAddedId=coin.id; save(); renderCard();
-      $("#coin-form").reset(); $("#desc-count").textContent="0/100"; state.coinImage='';
-      setMsg("« "+name+" » ajouté à votre profil.","ok");
+      var editing=state.editId; var coin={id:editing||(Date.now().toString(36)+Math.random().toString(36).slice(2,6)),name:name,ticker:ticker,chain:ch,address:a,desc:desc.value.trim(),logo:state.logo,image:state.coinImage||''};
+      if(editing) state.coins=state.coins.map(function(x){return x.id===editing?coin:x;}); else state.coins.push(coin);
+      lastAddedId=coin.id; save(); renderCard();
+      $("#coin-form").reset(); $("#desc-count").textContent="0/100"; state.coinImage=''; endEdit(); syncUploads();
+      setMsg("« "+name+" » "+(editing?"modifié.":"ajouté à votre profil."),"ok");
     });
   }
 
+  $("#c-cancel").addEventListener("click",function(){endEdit(); $("#coin-form").reset(); $("#desc-count").textContent="0/100"; state.coinImage=""; syncUploads(); setMsg("","");});
   $("#reset").addEventListener("click",function(){
     if(!window.confirm("Effacer le profil et tous les memecoins ?")) return;
     state.profile={name:"",handle:"",bio:"",emoji:"🐸",color:"#FFD23F"}; state.coins=[]; state.coinImage=''; lastAddedId=null;
     save(); $("#p-name").value=""; $("#p-handle").value=""; $("#p-bio").value=""; $("#bio-count").textContent="0/140";
-    renderPickers(); renderCard(); setMsg("","");
+    $("#coin-form").reset(); $("#desc-count").textContent="0/100"; state.logo="🐸"; endEdit();
+    renderPickers(); renderCard(); setMsg("",""); cardMsg("","");
   });
 
   /* ---------- Partage ---------- */
-  var viewing=null;
+  var viewing=null, badLink=false;
   var CHAINS=['Solana','Ethereum','Base','BNB Chain'];
   function b64e(s){return btoa(unescape(encodeURIComponent(s))).split('+').join('-').split('/').join('_').split('=').join('');}
   function b64d(s){s=s.split('-').join('+').split('_').join('/'); while(s.length%4) s+='='; return decodeURIComponent(escape(atob(s)));}
@@ -519,22 +573,24 @@ textarea.input{resize:vertical; min-height:74px}
     var out={profile:{name:str(p.name,30),handle:str(p.handle,20).toLowerCase().replace(/[^a-z0-9_]/g,''),bio:str(p.bio,140),emoji:str(p.emoji,8)||'🐸',color:cols.indexOf(p.color)>=0?p.color:cols[0]},coins:[]};
     (Array.isArray(d.coins)?d.coins:[]).slice(0,MAX_COINS).forEach(function(c,i){
       if(!c||typeof c!=='object') return;
-      out.coins.push({id:'s'+i,name:str(c.name,30),ticker:str(c.ticker,8).toUpperCase().replace(/[^A-Z0-9]/g,''),chain:CHAINS.indexOf(c.chain)>=0?c.chain:'Solana',address:str(c.address,64),desc:str(c.desc,100),logo:str(c.logo,8)||'🪙'});
+      var ch=CHAINS.indexOf(c.chain)>=0?c.chain:'Solana', ad=str(c.address,64), nm=str(c.name,30);
+      if(!nm||!validAddress(ch,ad)) return;
+      out.coins.push({id:'s'+i,name:nm,ticker:str(c.ticker,8).toUpperCase().replace(/[^A-Z0-9]/g,''),chain:ch,address:ad,desc:str(c.desc,100),logo:str(c.logo,8)||'🪙'});
     });
     return out;
   }
   function readHash(){
     var m=/^#p=([A-Za-z0-9_-]+)$/.exec(location.hash);
-    if(!m) return null;
-    try{return sanitize(JSON.parse(b64d(m[1])));}catch(e){return null;}
+    if(!m){badLink=/^#p=/.test(location.hash); return null;}
+    try{var r=sanitize(JSON.parse(b64d(m[1]))); badLink=!r; return r;}catch(e){badLink=true; return null;}
   }
   function updateShare(){
     var inp=$('#share-url'), btn=$('#copy-share');
     if(!state.profile.name){inp.value=''; btn.disabled=true; return;}
-    inp.value=shareUrl(); btn.disabled=false;
+    inp.value=(sb&&user&&published&&state.profile.handle)?baseUrl()+'#u='+state.profile.handle:shareUrl(); btn.disabled=false;
   }
   function showProfile(e){
-    viewing=e;
+    viewing=e; badLink=false;
     if(!e){try{history.replaceState(null,'',baseUrl());}catch(x){}}
     renderCard();
   }
@@ -544,11 +600,11 @@ textarea.input{resize:vertical; min-height:74px}
     function fail(){m.textContent='Lien sélectionné : copiez-le avec Ctrl/Cmd + C.'; m.className='msg';}
     try{navigator.clipboard.writeText(inp.value).then(function(){m.textContent='Lien copié.'; m.className='msg ok';},fail);}catch(e){fail();}
   });
-  function leaveView(){ if(viewing){showProfile(null);} }
+  function leaveView(){ if(viewing||badLink){showProfile(null);} }
   var edCol=document.querySelector('.editor-col');
   edCol.addEventListener('input',leaveView,true);
   edCol.addEventListener('click',leaveView,true);
-  window.addEventListener('hashchange',function(){var d=readHash(); viewing=d||null; renderCard();});
+  window.addEventListener('hashchange',function(){var d=readHash(); viewing=d||null; renderCard(); var h=handleFromHash(); if(h) openHandle(h);});
 
   /* ---------- Recherche ---------- */
   function demoAddr(chain,seed){
@@ -569,14 +625,16 @@ textarea.input{resize:vertical; min-height:74px}
     if(state.profile.name||state.profile.handle) list.unshift({own:true,profile:state.profile,coins:state.coins});
     return list;
   }
+  var remoteCache=[], lastRemoteQ='';
   function runSearch(){
     var raw=$('#search').value.trim(), q=raw.toLowerCase().replace(/^[@$]/,''), ul=$('#results');
     ul.innerHTML='';
     if(!q){ul.hidden=true; return;}
-    var hits=directory().filter(function(e){
-      var hay=[e.profile.name,e.profile.handle].concat(e.coins.map(function(c){return c.name+' '+c.ticker+' '+c.chain;})).join(' ').toLowerCase();
+    if(q!==lastRemoteQ){remoteCache=[]; lastRemoteQ=q; if(sb&&q.length>=2) remoteSearch(q).then(function(l){ if(lastRemoteQ===q){remoteCache=l; runSearch();} });}
+    var hits=directory().concat(remoteCache).filter(function(e){ if(e.remote) return true;
+      var hay=[e.profile.name,e.profile.handle].concat(e.coins.map(function(c){return c.name+' '+c.ticker+' '+c.chain+(q.length>=6?' '+c.address:'');})).join(' ').toLowerCase();
       return hay.indexOf(q)>=0;
-    }).slice(0,8);
+    }).slice(0,12);
     ul.hidden=false;
     if(!hits.length){ul.appendChild(el('li','none','Aucun résultat pour « '+raw+' ».')); return;}
     hits.forEach(function(e){
@@ -589,13 +647,15 @@ textarea.input{resize:vertical; min-height:74px}
       b.appendChild(t);
       b.addEventListener('click',function(){
         $('#search').value=''; runSearch();
-        showProfile(e.own?null:e);
+        if(e.remote) openRemote(e); else showProfile(e.own?null:e);
         $('#card').scrollIntoView({block:'start'});
       });
       li.appendChild(b); ul.appendChild(li);
     });
   }
   $('#search').addEventListener('input',runSearch);
+  $('#search').addEventListener('focus',runSearch);
+  document.addEventListener('click',function(ev){ if(!ev.target.closest('.search')) $('#results').hidden=true; });
   $('#search').addEventListener('keydown',function(ev){if(ev.key==='Escape'){$('#search').value=''; runSearch();}});
 
   /* ---------- Images (photo de profil, image du coin) ---------- */
@@ -644,7 +704,84 @@ textarea.input{resize:vertical; min-height:74px}
   });
   $('#c-image-clear').addEventListener('click',function(){state.coinImage=''; setMsg('',''); syncUploads();});
 
-  var first=readHash(); if(first) viewing=first;
+  /* ---------- Back-end Supabase (comptes + profils publics) ---------- */
+  function sbMsg(t){$("#auth-msg").textContent=t;}
+  function fromRow(r){return {id:r.id,name:r.name,ticker:r.ticker,chain:r.chain,address:r.address,desc:r.description||"",logo:r.logo||"🪙",image:""};}
+  function entry(r){return {remote:true,uid:r.user_id,profile:{name:r.name,handle:r.handle,bio:r.bio,emoji:r.emoji,color:r.color},coins:[]};}
+  function handleFromHash(){var m=/^#u=([a-z0-9_]{1,20})$/.exec(location.hash); return m?m[1]:null;}
+  function authUI(){
+    $("#auth").hidden=!sb; if(!sb) return;
+    $("#auth-email").hidden=$("#auth-login").hidden=!!user; $("#auth-logout").hidden=!user;
+    $("#auth-status").textContent=user?"Connecté : "+user.email+". Votre profil est public.":"Connectez-vous pour publier votre profil et vos memecoins.";
+  }
+  var pushT=null;
+  function schedulePush(){ if(!sb||!user) return; clearTimeout(pushT); pushT=setTimeout(push,800); }
+  async function push(){
+    var p=state.profile;
+    if(!p.name||!p.handle){sbMsg("Renseignez un nom et un pseudo pour publier votre profil."); return;}
+    var r=await sb.from("profiles").upsert({user_id:user.id,name:p.name,handle:p.handle,bio:p.bio,emoji:p.emoji,color:p.color});
+    if(r.error){published=false; sbMsg(r.error.code==="23505"?"Ce pseudo est déjà pris : choisissez-en un autre.":"Publication impossible : "+r.error.message); return;}
+    var rows=state.coins.map(function(c){return {user_id:user.id,id:c.id,name:c.name,ticker:c.ticker,chain:c.chain,address:c.address,description:c.desc||"",logo:c.logo};});
+    if(rows.length){r=await sb.from("coins").upsert(rows); if(r.error){sbMsg("Publication des coins impossible : "+r.error.message); return;}}
+    var del=sb.from("coins").delete().eq("user_id",user.id);
+    if(rows.length) del=del.not("id","in","("+rows.map(function(c){return c.id;}).join(",")+")");
+    await del; published=true; sbMsg("Profil publié."); updateShare(); loadExplore();
+  }
+  async function pull(){
+    var r=await sb.from("profiles").select("*").eq("user_id",user.id).maybeSingle();
+    if(!r.data||!r.data.handle){schedulePush(); return;}
+    var c=await sb.from("coins").select("*").eq("user_id",user.id).order("created_at");
+    state.profile=Object.assign(state.profile,entry(r.data).profile); state.coins=(c.data||[]).map(fromRow).slice(0,MAX_COINS);
+    published=true; save();
+    $("#p-name").value=state.profile.name; $("#p-handle").value=state.profile.handle; $("#p-bio").value=state.profile.bio; $("#bio-count").textContent=state.profile.bio.length+"/140";
+    renderPickers(); renderCard();
+  }
+  async function remoteSearch(q){
+    var like="%"+q.replace(/[%_,()*"\\]/g,"")+"%";
+    var c=await sb.from("coins").select("user_id").or("name.ilike."+like+",ticker.ilike."+like).limit(20);
+    var ids=(c.data||[]).map(function(x){return x.user_id;});
+    var r=await sb.from("profiles").select("*").or("name.ilike."+like+",handle.ilike."+like+(ids.length?",user_id.in.("+ids.join(",")+")":"")).limit(8);
+    return (r.data||[]).filter(function(x){return !user||x.user_id!==user.id;}).map(entry);
+  }
+  async function openRemote(e){
+    var c=await sb.from("coins").select("*").eq("user_id",e.uid).order("created_at");
+    showProfile({remote:true,profile:e.profile,coins:(c.data||[]).map(fromRow)});
+  }
+  async function openHandle(h){
+    if(!sb) return;
+    var r=await sb.from("profiles").select("*").eq("handle",h).maybeSingle();
+    if(!r.data||!r.data.handle){badLink=true; viewing=null; renderCard(); return;}
+    openRemote(entry(r.data));
+  }
+  async function loadExplore(){
+    var r=await sb.from("coins").select("name,ticker,chain,logo,profiles(handle)").order("created_at",{ascending:false}).limit(12);
+    var ul=$("#explore-list"); ul.innerHTML=""; $("#explore").hidden=false;
+    var rows=(r.data||[]).filter(function(c){return c.profiles;});
+    if(!rows.length){ul.appendChild(el("li","empty","Aucun memecoin publié pour l’instant.")); return;}
+    rows.forEach(function(c){
+      var li=el("li","coin"), mn=el("div","coin-main"), h=el("h3",null,c.name), mt=el("div","meta"), b=el("button","btn ghost small","@"+c.profiles.handle);
+      h.appendChild(el("span","ticker","$"+c.ticker)); mn.appendChild(h); mt.appendChild(el("span","pill",c.chain)); mn.appendChild(mt);
+      b.type="button"; b.addEventListener("click",function(){openHandle(c.profiles.handle); $("#card").scrollIntoView({block:"start"});});
+      li.appendChild(el("div","sticker",c.logo||"🪙")); li.appendChild(mn); li.appendChild(b); ul.appendChild(li);
+    });
+  }
+  if(SB_URL&&SB_KEY&&window.supabase){
+    sb=window.supabase.createClient(SB_URL,SB_KEY);
+    sb.auth.onAuthStateChange(function(ev,session){
+      user=session?session.user:null; if(!user) published=false; authUI(); updateShare();
+      if(user&&(ev==="INITIAL_SESSION"||ev==="SIGNED_IN")) setTimeout(pull,0);
+    });
+    $("#auth-login").addEventListener("click",async function(){
+      var em=$("#auth-email").value.trim();
+      if(!/^\S+@\S+\.\S+$/.test(em)) return sbMsg("Entrez une adresse email valide.");
+      var r=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});
+      sbMsg(r.error?"Envoi impossible : "+r.error.message:"Lien envoyé : ouvrez votre email et cliquez dessus.");
+    });
+    $("#auth-logout").addEventListener("click",function(){sb.auth.signOut();});
+    authUI(); loadExplore();
+  }
+
+  var first=readHash(); if(first) viewing=first; var hh=handleFromHash(); if(hh) openHandle(hh);
   load(); bindProfile(); bindCoin(); renderPickers(); renderCard();
 })();
 </script>
